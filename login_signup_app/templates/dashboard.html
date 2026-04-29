@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<video autoplay muted loop id="bg-video">
+    <source src="{{ url_for('static', filename='video.mp4') }}">
+</video>
+
+<div class="card">
+    <h2>Welcome</h2>
+    <p>Hello, {{ user }} 👋</p>
+
+    <br>
+    <a href="/logout">Logout</a>
+</div>
+
+</body>
+</html>

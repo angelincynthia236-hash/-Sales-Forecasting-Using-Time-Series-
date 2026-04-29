@@ -1,0 +1,141 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Background video */
+#bg-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    min-width: 100%;
+    min-height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+
+/* Card */
+.card {
+    width: 360px;
+    background: rgba(255,255,255,0.2);
+    padding: 30px;
+    border-radius: 18px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+    backdrop-filter: blur(12px);
+    text-align: center;
+}
+
+.card h2 {
+    color: #fff;
+    margin-bottom: 22px;
+}
+
+/* Input box */
+.input-box {
+    position: relative;
+    margin: 14px 0;
+}
+
+.input-box i.left {
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    transform: translateY(-50%);
+    color: #555;
+}
+
+.input-box i.eye {
+    position: absolute;
+    top: 50%;
+    right: 14px;
+    transform: translateY(-50%);
+    color: #555;
+    cursor: pointer;
+}
+
+.input-box input {
+    width: 100%;
+    padding: 12px 45px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+}
+
+/* Button */
+button {
+    width: 100%;
+    padding: 12px;
+    background: #00f2ea;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+/* Links spacing */
+.links {
+    margin-top: 18px;
+}
+
+.links a {
+    display: block;
+    margin-top: 8px;
+    color: #00f2ea;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+/* Flash message */
+p {
+    color: yellow;
+    margin-bottom: 12px;
+}
+.sidebar {
+    width: 240px;
+    background: #121212;
+    padding: 20px;
+    color: white;
+}
+
+.sidebar-title {
+    font-size: 14px;
+    color: #aaa;
+    margin-bottom: 20px;
+}
+
+.side-btn {
+    display: block;
+    background: #2b2b2b;
+    color: white;
+    text-decoration: none;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.side-btn:hover {
+    background: #3a3a3a;
+}
+.project-name {
+    position: absolute;
+    top: 40px;
+    width: 100%;
+    text-align: center;
+    font-size: 50px;
+    font-weight:italic bold;
+    color: rgb(12, 224, 231);
+    letter-spacing: 1px;
+    z-index: 10;
+    font-family:'bebas neue';
+}

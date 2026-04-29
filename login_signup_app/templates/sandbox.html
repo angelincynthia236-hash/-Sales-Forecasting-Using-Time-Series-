@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>INFRA PREDICT 📊 | Strategy Sandbox</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary-orange: #ff8c00; --sidebar-width: 260px; --glass-border: rgba(255, 255, 255, 0.1); }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: url("/static/home.jpeg") no-repeat center center fixed; background-size: cover; color: white; display: flex; }
+        .sidebar { width: var(--sidebar-width); height: 100vh; background: rgba(10, 10, 10, 0.85); backdrop-filter: blur(20px); position: fixed; padding: 30px 20px; border-right: 1px solid var(--glass-border); box-sizing: border-box; }
+        .nav-link { display: flex; align-items: center; color: rgba(255,255,255,0.6); text-decoration: none; padding: 12px 15px; border-radius: 12px; margin-bottom: 5px; font-size: 14px; }
+        .nav-link.active { background: rgba(255, 140, 0, 0.15); color: var(--primary-orange); }
+        .content { margin-left: var(--sidebar-width); width: 100%; padding: 60px; background: rgba(0, 0, 0, 0.5); min-height: 100vh; }
+        
+        .sandbox-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); padding: 40px; border-radius: 30px; border: 1px solid var(--glass-border); display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .slider-group { margin-bottom: 25px; }
+        input[type=range] { width: 100%; accent-color: var(--primary-orange); cursor: pointer; }
+        .impact-display { text-align: center; display: flex; flex-direction: column; justify-content: center; border-left: 1px solid var(--glass-border); }
+        .impact-value { font-size: 4rem; font-weight: 800; color: var(--primary-orange); margin: 10px 0; }
+    </style>
+</head>
+<body>
+   <div class="sidebar">
+
+        <span style="color: var(--primary-orange); font-size: 10px; font-weight: 800; letter-spacing: 2px;">POWER ANALYTICS</span>
+
+        <h2 style="margin: 5px 0 35px 0;">INFRA PREDICT 📊</h2>
+
+       
+
+        <nav>
+
+            <div style="margin-bottom: 20px;">
+
+                <p style="font-size: 10px; color: rgba(255,255,255,0.3); letter-spacing: 1px; margin-bottom: 10px; padding-left: 15px;">CORE ANALYTICS</p>
+
+                <a href="{{ url_for('home') }}" class="nav-link active"><i class="fas fa-home"></i> Home</a>
+
+                <a href="{{ url_for('upload') }}" class="nav-link"><i class="fas fa-upload"></i> Upload CSV</a>
+
+                <a href="{{ url_for('predict') }}" class="nav-link"><i class="fas fa-chart-line"></i> Trends</a>
+
+                <a href="{{ url_for('forecast') }}" class="nav-link"><i class="fas fa-magic"></i> AI Forecast</a>
+
+               
+               
+
+            </div>
+
+
+
+            <div style="margin-bottom: 20px;">
+
+                <p style="font-size: 10px; color: rgba(255,255,255,0.3); letter-spacing: 1px; margin-bottom: 10px; padding-left: 15px;">AI & STRATEGY</p>
+
+                <a href="{{ url_for('geo_analytics') }}" class="nav-link"><i class="fas fa-globe-americas"></i> Geo-Analytics</a>
+
+                <a href="{{ url_for('comparison') }}" class="nav-link"><i class="fas fa-balance-scale"></i> Comparison</a>
+
+                <a href="{{ url_for('allocator') }}" class="nav-link"><i class="fas fa-pie-chart"></i> Resource Radar</a>
+
+                <a href="{{ url_for('vault') }}" class="nav-link"><i class="fas fa-shield-alt"></i> Intelligence Vault</a>
+
+                <a href="{{ url_for('sandbox') }}" class="nav-link"><i class="fas fa-vial"></i> Strategy Sandbox</a>
+
+            </div>
+
+
+
+            <div style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+
+                <a href="{{ url_for('export') }}" class="nav-link"><i class="fas fa-file-export"></i> Export Center</a>
+
+                <a href="{{ url_for('logout') }}" class="nav-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+
+            </div>
+
+        </nav>
+
+    </div>
+
+
+    <div class="content">
+        <h1>Profit <span style="color: var(--primary-orange);">Simulator.</span></h1>
+        <p style="opacity: 0.7; margin-bottom: 30px;">Adjust variables to simulate "What-If" market scenarios.</p>
+
+        <div class="sandbox-card">
+            <div>
+                <div class="slider-group">
+                    <label>Material Price Shift: <span id="matVal">0</span>%</label>
+                    <input type="range" id="matSlider" min="-50" max="50" value="0">
+                </div>
+                <div class="slider-group">
+                    <label>Labor Cost Wage Hike: <span id="labVal">0</span>%</label>
+                    <input type="range" id="labSlider" min="-50" max="50" value="0">
+                </div>
+                <div class="slider-group">
+                    <label>Operational Efficiency: <span id="effVal">100</span>%</label>
+                    <input type="range" id="effSlider" min="50" max="150" value="100">
+                </div>
+            </div>
+
+            <div class="impact-display">
+                <p style="opacity: 0.6; text-transform: uppercase; letter-spacing: 1px;">Projected Profit Margin</p>
+                <div class="impact-value" id="totalImpact">₹{{ stats.profit }}</div>
+                <p id="verdict" style="color: #05cd99;">Current Baseline Stable</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const matS = document.getElementById('matSlider');
+        const labS = document.getElementById('labSlider');
+        const effS = document.getElementById('effSlider');
+        const baseProfit = {{ raw_profit }}; // Total Profit from DB
+
+        function updateSim() {
+            document.getElementById('matVal').innerText = matS.value;
+            document.getElementById('labVal').innerText = labS.value;
+            document.getElementById('effVal').innerText = effS.value;
+
+            // Simplified Simulation Logic
+            let multiplier = (effS.value / 100) - (matS.value / 200) - (labS.value / 200);
+            let newProfit = baseProfit * multiplier;
+            
+            document.getElementById('totalImpact').innerText = "₹" + Math.round(newProfit).toLocaleString();
+            
+            const verdict = document.getElementById('verdict');
+            if(newProfit < baseProfit) {
+                verdict.innerText = "⚠️ High Risk: Margin Compression";
+                verdict.style.color = "#ff5252";
+            } else {
+                verdict.innerText = "✅ Opportunity: Profit Growth";
+                verdict.style.color = "#05cd99";
+            }
+        }
+
+        [matS, labS, effS].forEach(s => s.addEventListener('input', updateSim));
+    </script>
+</body>
+</html>

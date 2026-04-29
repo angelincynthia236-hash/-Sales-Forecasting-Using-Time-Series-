@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Run Prediction</title>
+</head>
+<body style="background:black;color:white;padding:40px">
+
+<h1>▶ Run Prediction</h1>
+
+<form method="post">
+    <button type="submit">Predict Now</button>
+</form>
+
+{% if prediction %}
+<h2>Average Sales Prediction: {{ prediction }}</h2>
+{% endif %}
+
+</body>
+</html>

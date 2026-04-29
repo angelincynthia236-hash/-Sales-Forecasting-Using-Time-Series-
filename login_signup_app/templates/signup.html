@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sign Up 👤</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #0a0a0a; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
+        #bg-video { position: fixed; right: 0; bottom: 0; min-width: 100%; min-height: 100%; z-index: -1; }
+        
+        .card { 
+            background: rgba(255,255,255,0.05); 
+            padding: 40px; 
+            border-radius: 20px; 
+            border: 1px solid rgba(255,255,255,0.1); 
+            width: 340px; 
+            text-align: center; 
+            backdrop-filter: blur(10px); 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+
+        .input-group { position: relative; width: 100%; }
+        
+        input { 
+            width: 100%; 
+            padding: 12px; 
+            margin: 8px 0; 
+            border-radius: 8px; 
+            border: 1px solid #333; 
+            background: rgba(0,0,0,0.5); 
+            color: white; 
+            box-sizing: border-box; 
+            transition: 0.3s;
+        }
+
+        input:focus { border-color: #ff8c00; outline: none; background: rgba(0,0,0,0.7); }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 20px;
+            cursor: pointer;
+            color: #888;
+            transition: 0.3s;
+        }
+        .toggle-password:hover { color: #ff8c00; }
+
+        button { 
+            width: 100%; 
+            padding: 12px; 
+            border: none; 
+            border-radius: 8px; 
+            background: #ff8c00; 
+            color: white; 
+            font-weight: bold; 
+            cursor: pointer; 
+            margin-top: 10px; 
+            transition: 0.3s;
+        }
+        button:hover { background: #ffae42; transform: translateY(-2px); }
+
+        .project-name { position: absolute; top: 40px; color: #ff8c00; letter-spacing: 2px; font-weight: 800; }
+        
+        a { color: #888; text-decoration: none; font-size: 13px; transition: 0.3s; }
+        a:hover { color: #ff8c00; }
+
+        #error-msg { color: #ff5252; font-size: 12px; margin-top: 10px; display: none; line-height: 1.4; }
+    </style>
+</head>
+<body>
+
+<video autoplay muted loop id="bg-video">
+    <source src="{{ url_for('static', filename='video.mp4') }}">
+</video>
+
+<h1 class="project-name">INFRA PREDICT📊</h1>
+
+<div class="card">
+    <h2 style="margin-bottom: 20px;">Sign Up🤖</h2>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <p style="color: #ffae42; font-size: 12px;">{{ messages[0] }}</p>
+      {% endif %}
+    {% endwith %}
+
+    <form action="{{ url_for('signup') }}" method="post" id="signupForm">
+        <input type="text" name="username" id="username" placeholder="Username" required>
+        <input type="email" name="email" id="email" placeholder="Email" required>
+        
+        <div class="input-group">
+            <input type="password" name="password" id="password" placeholder="Password" required>
+            <i class="fas fa-eye toggle-password" onclick="togglePass('password', this)"></i>
+        </div>
+
+        <div class="input-group">
+            <input type="password" name="confirm" id="confirm" placeholder="Confirm Password" required>
+            <i class="fas fa-eye toggle-password" onclick="togglePass('confirm', this)"></i>
+        </div>
+
+        <p id="error-msg"></p>
+        <button type="submit">Register</button>
+    </form>
+
+    <br>
+    <a href="{{ url_for('login') }}">Back to Login</a>
+</div>
+
+<script>
+    // 1. Password Visibility Toggle Function
+    function togglePass(fieldId, icon) {
+        const field = document.getElementById(fieldId);
+        if (field.type === "password") {
+            field.type = "text";
+            icon.classList.replace("fa-eye", "fa-eye-slash");
+        } else {
+            field.type = "password";
+            icon.classList.replace("fa-eye-slash", "fa-eye");
+        }
+    }
+
+    // 2. Advanced Validation
+    const signupForm = document.getElementById('signupForm');
+    const errorMsg = document.getElementById('error-msg');
+
+    signupForm.addEventListener('submit', function(e) {
+        const username = document.getElementById('username').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const confirm = document.getElementById('confirm').value;
+        
+        let errors = [];
+
+        if (username.length < 3) errors.push("Username must be 3+ chars.");
+        
+        // Simple Email Regex
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(email)) errors.push("Enter a valid email.");
+
+        if (password.length < 6) errors.push("Password must be 6+ chars.");
+        
+        if (password !== confirm) errors.push("Passwords do not match.");
+
+        if (errors.length > 0) {
+            e.preventDefault();
+            errorMsg.innerText = errors.join(" | ");
+            errorMsg.style.display = 'block';
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Infra Predict | Intelligence Vault</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-orange: #ff8c00;
+            --sidebar-width: 260px;
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --neon-cyan: #00f2ff;
+            --neon-purple: #bc13fe;
+            --neon-green: #00ff88;
+            --neon-red: #ff4444;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: url("/static/home.jpeg") no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            display: flex;
+        }
+
+        /* Sidebar styling remains same */
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(20px);
+            position: fixed;
+            padding: 30px 20px;
+            border-right: 1px solid var(--glass-border);
+            box-sizing: border-box;
+            z-index: 100;
+        }
+
+        .nav-link {
+            display: flex; align-items: center; color: rgba(255,255,255,0.6);
+            text-decoration: none; padding: 12px 15px; border-radius: 12px;
+            margin-bottom: 5px; transition: 0.3s; font-size: 14px;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255, 140, 0, 0.15); color: var(--primary-orange);
+        }
+
+        .nav-link i { margin-right: 12px; width: 20px; text-align: center; }
+
+        .content {
+            margin-left: var(--sidebar-width);
+            width: 100%; padding: 60px;
+            background: rgba(0, 0, 0, 0.7); min-height: 100vh;
+        }
+
+        /* --- NEW: Search Bar Styling --- */
+        .search-container {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            background: transparent;
+        }
+
+        .search-wrapper {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 10px 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .search-wrapper i { color: var(--primary-orange); margin-right: 15px; }
+
+        .search-wrapper input {
+            background: transparent;
+            border: none;
+            color: white;
+            width: 100%;
+            font-size: 16px;
+            outline: none;
+        }
+
+        /* --- Vault Content Styling --- */
+        .city-section { margin-bottom: 50px; }
+
+        .city-group-header {
+            margin: 20px 0; padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            color: var(--primary-orange); text-transform: uppercase;
+            letter-spacing: 3px; font-weight: 800;
+            display: flex; align-items: center; gap: 15px;
+        }
+
+        .vault-card {
+            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px);
+            padding: 30px; border-radius: 25px; border: 1px solid var(--glass-border);
+            margin-bottom: 25px; transition: 0.4s; position: relative; overflow: hidden;
+        }
+
+        .card-best { border-left: 5px solid var(--neon-green); background: rgba(0, 255, 136, 0.05); }
+        .card-worst { border-left: 5px solid var(--neon-red); background: rgba(255, 68, 68, 0.05); }
+
+        .rank-badge {
+            position: absolute; top: 20px; right: 30px; padding: 5px 15px;
+            border-radius: 20px; font-size: 10px; font-weight: 900; letter-spacing: 1px;
+        }
+        .badge-best { background: var(--neon-green); color: black; box-shadow: 0 0 15px var(--neon-green); }
+        .badge-worst { background: var(--neon-red); color: white; box-shadow: 0 0 15px var(--neon-red); }
+
+        .text-revenue { font-size: 2rem; color: #ffffff; font-weight: 800; margin: 10px 0; }
+        
+        .diagnostic-bar {
+            display: flex; height: 10px; border-radius: 5px;
+            overflow: hidden; margin: 20px 0; background: rgba(255,255,255,0.1);
+        }
+
+        .meta-info { display: flex; gap: 20px; font-size: 13px; opacity: 0.7; margin-bottom: 15px; }
+        .meta-info i { color: var(--primary-orange); margin-right: 5px; }
+    </style>
+</head>
+<body>
+
+    <<div class="sidebar">
+
+        <span style="color: var(--primary-orange); font-size: 10px; font-weight: 800; letter-spacing: 2px;">POWER ANALYTICS</span>
+
+        <h2 style="margin: 5px 0 35px 0;">INFRA PREDICT 📊</h2>
+
+       
+
+        <nav>
+
+            <div style="margin-bottom: 20px;">
+
+                <p style="font-size: 10px; color: rgba(255,255,255,0.3); letter-spacing: 1px; margin-bottom: 10px; padding-left: 15px;">CORE ANALYTICS</p>
+
+                <a href="{{ url_for('home') }}" class="nav-link active"><i class="fas fa-home"></i> Home</a>
+
+                <a href="{{ url_for('upload') }}" class="nav-link"><i class="fas fa-upload"></i> Upload CSV</a>
+
+                <a href="{{ url_for('predict') }}" class="nav-link"><i class="fas fa-chart-line"></i> Trends</a>
+
+                <a href="{{ url_for('forecast') }}" class="nav-link"><i class="fas fa-magic"></i> AI Forecast</a>
+
+               
+               
+
+            </div>
+
+
+
+            <div style="margin-bottom: 20px;">
+
+                <p style="font-size: 10px; color: rgba(255,255,255,0.3); letter-spacing: 1px; margin-bottom: 10px; padding-left: 15px;">AI & STRATEGY</p>
+
+                <a href="{{ url_for('geo_analytics') }}" class="nav-link"><i class="fas fa-globe-americas"></i> Geo-Analytics</a>
+
+                <a href="{{ url_for('comparison') }}" class="nav-link"><i class="fas fa-balance-scale"></i> Comparison</a>
+
+                <a href="{{ url_for('allocator') }}" class="nav-link"><i class="fas fa-pie-chart"></i> Resource Radar</a>
+
+                <a href="{{ url_for('vault') }}" class="nav-link"><i class="fas fa-shield-alt"></i> Intelligence Vault</a>
+
+                <a href="{{ url_for('sandbox') }}" class="nav-link"><i class="fas fa-vial"></i> Strategy Sandbox</a>
+
+            </div>
+
+
+
+            <div style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+
+                <a href="{{ url_for('export') }}" class="nav-link"><i class="fas fa-file-export"></i> Export Center</a>
+
+                <a href="{{ url_for('logout') }}" class="nav-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+
+            </div>
+
+        </nav>
+
+    </div>
+
+    <div class="content">
+        <h1 style="font-size: 2.5rem; margin-bottom: 5px;">Intelligence <span style="color: var(--primary-orange);">Anomaly Vault.</span></h1>
+        
+        <div class="search-container">
+            <div class="search-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" id="vaultSearch" placeholder="Search by City or Project ID..." onkeyup="filterVault()">
+            </div>
+        </div>
+
+        {% if alerts %}
+            <div id="vaultContent">
+            {% for location, location_alerts in alerts|groupby('location') %}
+                <div class="city-section" data-city="{{ location.lower() }}">
+                    <h2 class="city-group-header">
+                        <i class="fas fa-city"></i> {{ location }} Analysis Cluster
+                    </h2>
+
+                    {% for alert in location_alerts %}
+                    <div class="vault-card {% if alert.rank_tag == 'BEST' %}card-best{% elif alert.rank_tag == 'WORST' %}card-worst{% endif %}" 
+                         data-pid="{{ alert.id.lower() }}">
+                        
+                        {% if alert.rank_tag != 'NEUTRAL' %}
+                        <div class="rank-badge {% if alert.rank_tag == 'BEST' %}badge-best{% else %}badge-worst{% endif %}">
+                            {{ alert.rank_tag }} PERFORMANCE
+                        </div>
+                        {% endif %}
+
+                        <div class="meta-info">
+                            <span><i class="fas fa-hashtag"></i> {{ alert.id }}</span>
+                            <span><i class="fas fa-calendar-alt"></i> {{ alert.date }}</span>
+                            <span><i class="fas fa-map-pin"></i> {{ alert.location }}</span>
+                        </div>
+
+                        <h2 class="text-revenue">₹{{ "{:,.0f}".format(alert.revenue) }}</h2>
+                        
+                        {% set total_cost = alert.labor + alert.material + alert.equipment %}
+                        <div class="diagnostic-bar">
+                            <div style="width: {{ (alert.labor / total_cost * 100) if total_cost > 0 else 0 }}%; background: var(--neon-cyan);"></div>
+                            <div style="width: {{ (alert.material / total_cost * 100) if total_cost > 0 else 0 }}%; background: var(--neon-purple);"></div>
+                            <div style="width: {{ (alert.equipment / total_cost * 100) if total_cost > 0 else 0 }}%; background: var(--primary-orange);"></div>
+                        </div>
+
+                        <div style="display: flex; gap: 30px; font-size: 13px;">
+                            <span>Labor: <b>₹{{ "{:,.0f}".format(alert.labor) }}</b></span>
+                            <span>Material: <b>₹{{ "{:,.0f}".format(alert.material) }}</b></span>
+                            <span>Equip: <b>₹{{ "{:,.0f}".format(alert.equipment) }}</b></span>
+                            <span style="margin-left: auto;">Cost Ratio: <b style="color: {% if alert.deviation > 80 %}#ff4444{% else %}#00ff88{% endif %};">{{ alert.deviation }}%</b></span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            </div>
+        {% else %}
+            <div style="text-align: center; padding: 100px; opacity: 0.3;">
+                <i class="fas fa-database" style="font-size: 4rem; margin-bottom: 20px;"></i>
+                <h2>No Intelligence Data</h2>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function filterVault() {
+            let input = document.getElementById('vaultSearch').value.toLowerCase();
+            let sections = document.getElementsByClassName('city-section');
+
+            for (let i = 0; i < sections.length; i++) {
+                let city = sections[i].getAttribute('data-city');
+                let cards = sections[i].getElementsByClassName('vault-card');
+                let cityVisible = false;
+
+                if (city.includes(input)) {
+                    // If city name matches, show the whole section
+                    sections[i].style.display = "";
+                    for (let j = 0; j < cards.length; j++) {
+                        cards[j].style.display = "";
+                    }
+                } else {
+                    // Check individual Project IDs within the city
+                    let anyCardVisible = false;
+                    for (let j = 0; j < cards.length; j++) {
+                        let pid = cards[j].getAttribute('data-pid');
+                        if (pid.includes(input)) {
+                            cards[j].style.display = "";
+                            anyCardVisible = true;
+                        } else {
+                            cards[j].style.display = "none";
+                        }
+                    }
+                    // Hide city header if no projects match
+                    sections[i].style.display = anyCardVisible ? "" : "none";
+                }
+            }
+        }
+    </script>
+</body>
+</html>

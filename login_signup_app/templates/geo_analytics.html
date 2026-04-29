@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>INFRA PREDICT 📊 | Geo-Analytics</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary-orange: #ff8c00; --sidebar-width: 260px; --glass: rgba(255, 255, 255, 0.05); --glass-border: rgba(255, 255, 255, 0.1); }
+        
+        body { margin: 0; font-family: 'Inter', sans-serif; background: url("/static/home.jpeg") no-repeat center center fixed; background-size: cover; color: white; display: flex; height: 100vh; overflow: hidden; }
+        body::before { content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: -1; }
+        
+        .sidebar { width: var(--sidebar-width); height: 100vh; background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(20px); position: fixed; padding: 30px 20px; border-right: 1px solid var(--glass-border); box-sizing: border-box; z-index: 1000; }
+        .nav-link { display: flex; align-items: center; color: rgba(255,255,255,0.6); text-decoration: none; padding: 12px 15px; border-radius: 12px; margin-bottom: 5px; font-size: 14px; transition: 0.3s; }
+        .nav-link:hover { color: white; background: rgba(255,255,255,0.05); }
+        .nav-link.active { background: rgba(255, 140, 0, 0.15); color: var(--primary-orange); }
+
+        .content-wrapper { margin-left: var(--sidebar-width); flex: 1; display: flex; flex-direction: column; height: 100vh; }
+        .top-bar { padding: 40px 60px 20px 60px; }
+        .hero-card { background: var(--glass); backdrop-filter: blur(20px); padding: 30px; border-radius: 25px; border: 1px solid var(--glass-border); }
+        .main-layout { display: flex; flex: 1; padding: 0 60px 40px 60px; gap: 30px; overflow: hidden; }
+
+        .leaderboard-panel { width: 400px; background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border-radius: 20px; border: 1px solid var(--glass-border); display: flex; flex-direction: column; overflow: hidden; }
+        .leaderboard-header { padding: 20px; border-bottom: 1px solid var(--glass-border); }
+        .leaderboard-content { flex: 1; overflow-y: auto; padding: 20px; }
+        
+        .city-card { background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 15px; margin-bottom: 12px; cursor: pointer; border: 1px solid transparent; transition: 0.3s; border-left: 4px solid var(--primary-orange); }
+        .city-card:hover { transform: translateX(5px); background: rgba(255, 255, 255, 0.1); }
+
+        .map-panel { flex: 1; background: rgba(0, 0, 0, 0.4); border-radius: 20px; border: 1px solid var(--glass-border); position: relative; overflow: hidden; }
+        #map { height: 100%; width: 100%; background: #0b0d10; }
+
+        @keyframes marker-pulse {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0.8; }
+            100% { transform: translate(-50%, -50%) scale(3); opacity: 0; }
+        }
+        .pulse-effect { position: absolute; width: 15px; height: 15px; border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%); animation: marker-pulse 2s infinite; }
+
+        .leaderboard-content::-webkit-scrollbar { width: 5px; }
+        .leaderboard-content::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <span style="color: var(--primary-orange); font-size: 10px; font-weight: 800; letter-spacing: 2px;">POWER ANALYTICS</span>
+        <h2 style="margin: 5px 0 35px 0;">INFRA PREDICT 📊</h2>
+        <nav>
+            <div style="margin-bottom: 20px;">
+                <p style="font-size: 10px; color: rgba(255,255,255,0.3); letter-spacing: 1px; margin-bottom: 10px; padding-left: 15px;">CORE ANALYTICS</p>
+                <a href="{{ url_for('home') }}" class="nav-link"><i class="fas fa-home" style="width:20px"></i> Home</a>
+                <a href="{{ url_for('upload') }}" class="nav-link"><i class="fas fa-upload" style="width:20px"></i> Upload CSV</a>
+                <a href="{{ url_for('predict') }}" class="nav-link"><i class="fas fa-chart-line" style="width:20px"></i> Trends</a>
+                <a href="{{ url_for('forecast') }}" class="nav-link"><i class="fas fa-magic" style="width:20px"></i> AI Forecast</a>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <p style="font-size: 10px; color: rgba(255,255,255,0.3); letter-spacing: 1px; margin-bottom: 10px; padding-left: 15px;">AI & STRATEGY</p>
+                <a href="{{ url_for('geo_analytics') }}" class="nav-link active"><i class="fas fa-globe-americas" style="width:20px"></i> Geo-Analytics</a>
+                <a href="{{ url_for('comparison') }}" class="nav-link"><i class="fas fa-balance-scale" style="width:20px"></i> Comparison</a>
+                <a href="{{ url_for('allocator') }}" class="nav-link"><i class="fas fa-pie-chart" style="width:20px"></i> Resource Radar</a>
+                <a href="{{ url_for('vault') }}" class="nav-link"><i class="fas fa-shield-alt" style="width:20px"></i> Intelligence Vault</a>
+                <a href="{{ url_for('sandbox') }}" class="nav-link"><i class="fas fa-vial" style="width:20px"></i> Strategy Sandbox</a>
+            </div>
+            <div style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+                <a href="{{ url_for('export') }}" class="nav-link"><i class="fas fa-file-export" style="width:20px"></i> Export Center</a>
+                <a href="{{ url_for('logout') }}" class="nav-link"><i class="fas fa-sign-out-alt" style="width:20px"></i> Logout</a>
+            </div>
+        </nav>
+    </div>
+
+    <div class="content-wrapper">
+        <div class="top-bar">
+            <div class="hero-card">
+                <span style="font-size: 10px; color: rgba(255,255,255,0.4); letter-spacing: 2px; text-transform: uppercase;">Geospatial Intelligence</span>
+                <h1 style="margin: 10px 0 0 0;">Market <span style="color: var(--primary-orange);">Leaderboard.</span></h1>
+            </div>
+        </div>
+
+        <div class="main-layout">
+            <div class="leaderboard-panel">
+                <div class="leaderboard-header">
+                    <h3 style="margin: 0; font-size: 16px; opacity: 0.8;"><i class="fas fa-trophy" style="color: var(--primary-orange);"></i> Regional Rankings</h3>
+                </div>
+                <div class="leaderboard-content" id="leaderboard"></div>
+            </div>
+            
+            <div class="map-panel">
+                <div id="map"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. Initialize Map
+        var map = L.map('map', { zoomControl: false, attributionControl: false }).setView([20.5937, 78.9629], 5);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
+
+        // 2. Load Data
+        const locations = {{ locations|tojson }};
+        const sortedLocs = [...locations].sort((a, b) => b.rev - a.rev);
+        const leaderboardContainer = document.getElementById('leaderboard');
+
+        sortedLocs.forEach((loc, index) => {
+            // 3. Four Color Logic based on Rank
+            let color;
+            if (index === 0) {
+                color = '#00ff88'; // Rank 1: Green
+            } else if (index > 0 && index < 3) {
+                color = '#00d4ff'; // Rank 2: Blue
+            } else if (index >= 3 && index < 6) {
+                color = '#ff8c00'; // Rank 3: Orange
+            } else {
+                color = '#9d50bb'; // Rank 4: Purple
+            }
+            
+            // 4. Custom Marker Icon
+            const icon = L.divIcon({
+                className: 'custom-marker',
+                html: `
+                    <div style="position: relative;">
+                        <div class="pulse-effect" style="background: ${color}; left: 0px; top: 0px;"></div>
+                        <svg width="24" height="32" viewBox="0 0 24 32" style="position: absolute; left: -12px; top: -32px;">
+                            <path d="M12 0C5.37 0 0 5.37 0 12c0 9 12 20 12 20s12-11 12-20c0-6.63-5.37-12-12-12z" fill="${color}"/>
+                            <circle cx="12" cy="12" r="4" fill="white" fill-opacity="0.4"/>
+                        </svg>
+                    </div>`,
+                iconSize: [0, 0]
+            });
+
+            const marker = L.marker([loc.lat, loc.lon], { icon: icon }).addTo(map);
+            
+            // 5. Create Leaderboard Card
+            const card = document.createElement('div');
+            card.className = 'city-card';
+            card.style.borderLeftColor = color;
+            card.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <span style="font-size: 10px; color: ${color}; font-weight: 800; letter-spacing: 1px;">RANK #${index + 1}</span>
+                        <b style="display: block; font-size: 15px; margin-top: 3px; letter-spacing: 0.5px;">${loc.name.toUpperCase()}</b>
+                    </div>
+                    <div style="text-align: right;">
+                        <span style="font-size: 14px; font-weight: 700; color: white;">₹${(loc.rev / 1000).toFixed(1)}K</span>
+                        <div style="font-size: 9px; opacity: 0.5; letter-spacing: 1px;">REVENUE</div>
+                    </div>
+                </div>
+            `;
+            
+            card.onclick = () => {
+                map.flyTo([loc.lat, loc.lon], 8, { duration: 1.5 });
+                marker.bindPopup(`<div style="color:#333; font-family:Inter; padding:5px;">
+                                    <b>${loc.name}</b><br>
+                                    <span style="color:#666;">Total Rev: ₹${loc.rev.toLocaleString()}</span>
+                                  </div>`).openPopup();
+            };
+
+            leaderboardContainer.appendChild(card);
+        });
+    </script>
+</body>
+</html>

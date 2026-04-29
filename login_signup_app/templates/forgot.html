@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Forgot Password👤</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #0a0a0a; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
+        #bg-video { position: fixed; right: 0; bottom: 0; min-width: 100%; min-height: 100%; z-index: -1; }
+        .card { background: rgba(255,255,255,0.05); padding: 40px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); width: 320px; text-align: center; backdrop-filter: blur(10px); }
+        input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #333; background: rgba(0,0,0,0.5); color: white; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; border: none; border-radius: 8px; background: #ff8c00; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .project-name { position: absolute; top: 40px; color: #ff8c00; letter-spacing: 2px; }
+    </style>
+</head>
+<body>
+
+<video autoplay muted loop id="bg-video">
+    <source src="{{ url_for('static', filename='video.mp4') }}">
+</video>
+
+<h1 class="project-name">INFRA PREDICT📊</h1>
+
+<div class="card">
+    <h2>Reset Password</h2>
+    <p style="font-size: 12px; opacity: 0.6; margin-bottom: 20px;">Enter your email to update your password.</p>
+
+    <form action="{{ url_for('forgot') }}" method="post">
+        <input type="email" name="email" placeholder="Registered Email" required>
+        <input type="password" name="new_password" placeholder="New Password" required>
+        <button type="submit">Reset Password</button>
+    </form>
+
+    <br>
+    <a href="{{ url_for('login') }}" style="color: #888; text-decoration: none; font-size: 13px;">Back to Login</a>
+</div>
+
+</body>
+</html>

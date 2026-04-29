@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Reset Password</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="container">
+  <h2>Reset Password</h2>
+
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <p class="error">{{ messages[0] }}</p>
+  {% endif %}
+  {% endwith %}
+
+  <form method="POST" action="/reset_password">
+    <input type="hidden" name="token" value="{{ token }}">
+    <input type="password" name="password" placeholder="New Password" required minlength="6">
+    <input type="password" name="confirm" placeholder="Confirm Password" required>
+    <button type="submit">Reset</button>
+  </form>
+</div>
+
+</body>
+</html>

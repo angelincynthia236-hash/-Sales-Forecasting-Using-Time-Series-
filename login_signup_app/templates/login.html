@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>INFRA PREDICT 📊| Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #0a0a0a; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
+        #bg-video { position: fixed; right: 0; bottom: 0; min-width: 100%; min-height: 100%; z-index: -1; }
+        
+        .login-card { 
+            background: rgba(255,255,255,0.05); 
+            padding: 40px; 
+            border-radius: 20px; 
+            border: 1px solid rgba(255,255,255,0.1); 
+            width: 340px; 
+            text-align: center; 
+            backdrop-filter: blur(10px); 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+
+        .input-group { position: relative; width: 100%; }
+        
+        input { 
+            width: 100%; 
+            padding: 12px; 
+            margin: 10px 0; 
+            border-radius: 8px; 
+            border: 1px solid #333; 
+            background: rgba(0,0,0,0.5); 
+            color: white; 
+            box-sizing: border-box; 
+            transition: 0.3s;
+        }
+        
+        input:focus { border-color: #ff8c00; outline: none; background: rgba(0,0,0,0.7); }
+
+        /* Eye Icon Styling */
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 22px;
+            cursor: pointer;
+            color: #888;
+            transition: 0.3s;
+        }
+        .toggle-password:hover { color: #ff8c00; }
+
+        button { 
+            width: 100%; 
+            padding: 12px; 
+            border: none; 
+            border-radius: 8px; 
+            background: #ff8c00; 
+            color: white; 
+            font-weight: bold; 
+            cursor: pointer; 
+            margin-top: 10px; 
+            transition: 0.3s; 
+        }
+        button:hover { background: #ffae42; transform: translateY(-2px); }
+        
+        a { color: #888; text-decoration: none; font-size: 13px; transition: 0.3s; }
+        a:hover { color: #ff8c00; }
+
+        #error-msg { color: #ff5252; font-size: 12px; margin-top: 10px; display: none; }
+    </style>
+</head>
+<body>
+
+<video autoplay muted loop id="bg-video">
+    <source src="{{ url_for('static', filename='video.mp4') }}">
+</video>
+
+<div class="login-card">
+    <h2 style="color: #ff8c00; margin-bottom: 5px;">INFRA PREDICT 📊</h2>
+    <p style="margin-bottom: 25px; opacity: 0.7;">Business Intelligence Portal</p>
+    
+    <form action="{{ url_for('login') }}" method="POST" id="loginForm">
+        <input type="text" name="username" id="username" placeholder="Username" required>
+        
+        <div class="input-group">
+            <input type="password" name="password" id="password" placeholder="Password" required>
+            <i class="fas fa-eye toggle-password" id="eyeIcon"></i>
+        </div>
+        
+        <p id="error-msg"></p>
+        <button type="submit">Login</button>
+    </form>
+
+    <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
+        <a href="{{ url_for('forgot') }}">Forgot Password?</a>
+        <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
+            <span style="font-size: 12px; opacity: 0.5;">New here?</span> 
+            <a href="{{ url_for('signup') }}" style="color: #ff8c00; font-weight: bold;">Sign Up🤖</a>
+        </div>
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <p style="color: #ff5252; font-size: 12px; margin-top: 15px;">{{ messages[0] }}</p>
+      {% endif %}
+    {% endwith %}
+</div>
+
+<script>
+    // 1. Password Visibility Toggle
+    const passwordField = document.querySelector('#password');
+    const eyeIcon = document.querySelector('#eyeIcon');
+
+    eyeIcon.addEventListener('click', function() {
+        const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordField.setAttribute('type', type);
+        this.classList.toggle('fa-eye-slash');
+    });
+
+    // 2. Form Validation Logic
+    const loginForm = document.getElementById('loginForm');
+    const errorMsg = document.getElementById('error-msg');
+
+    loginForm.addEventListener('submit', function(e) {
+        const username = document.getElementById('username').value.trim();
+        const password = passwordField.value;
+        let messages = [];
+
+        // Validation Rules
+        if (username.length < 3) {
+            messages.push("Username must be at least 3 characters.");
+        }
+        if (password.length < 5) {
+            messages.push("Password is too short.");
+        }
+
+        if (messages.length > 0) {
+            e.preventDefault(); // Stop form from submitting
+            errorMsg.innerText = messages.join(' ');
+            errorMsg.style.display = 'block';
+        }
+    });
+</script>
+
+</body>
+</html>
